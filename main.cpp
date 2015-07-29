@@ -14,9 +14,15 @@ using namespace std;
 
 //Global Constants
 //Function Prototypes
-char square[10]={'o','1','2','3','4','5','6','7','8','9'};//to choose space
-int checkwin();//to check who has won while playing
-void board();//the board where the numbers will be at to chose space
+
+void display_board();
+void player_turn();
+bool gameover();
+
+char turn;
+bool draw = false;
+char board[3][3] = {{'1', '2', '3'}, {'4', '5', '6'}, {'7', '8', '9'}};
+
 
 int hard(int&sum) {
     int sum1 = sum - 10;
@@ -274,92 +280,33 @@ void problem1(){
 void problem2(){
     cout<<"In problem # 2"<<endl<<endl;
     //Declare variables
-    int player=1;//player number 1
-    int i;
-    int choice;//choise made by player
-    char mark;//mark where the chosen number was
     
-    //input values here!
-    do
+    cout << "Tic Tac Toe Game\n";
+    cout << "Player 1 [X] --- Player 2 [O]\n";
+    turn = 'X';
+    
+    while (!gameover())
     {
-        board();
-        player=(player%2)?1:2;//which player is next
-        cout<<"Player "<<player<<", choose a space: ";
-        cin>>choice;
-        mark=(player==1)?'X':'O';
-        //choosing marks
-        if(choice ==1&&square[1]=='1')
-            square[1]=mark;
-        else if (choice==2&&square[2]=='2')
-            square[2]=mark;
-        else if(choice==3&&square[3]=='3')
-            square[3]=mark;
-        else if(choice==4&&square[4]=='4')
-            square[4]=mark;
-        else if(choice==5&&square[5]=='5')
-            square[5]=mark;
-        else if(choice==6&&square[6]=='6')
-            square[6]=mark;
-        else if(choice==7&&square[7]=='7')
-            square[7]=mark;
-        else if(choice==8&&square[8]=='8')
-            square[8]=mark;
-        else if(choice==9&&square[9]=='9')
-            square[9]=mark;
-        else
-        {
-            cout<<"Invalid move";
-            player--;
-            cin.ignore();
-            cin.get();
-        }
-        i=checkwin();
-        player++;
+        display_board();
+        player_turn();
+        gameover();
     }
-    while(i==-1);
-    board();
-    if(i==1)
-        cout<<"-->\aPlayer "<<--player<<" win ";
+    
+    if (turn == 'O' && !draw)
+    {
+        display_board();
+        cout << endl << endl << "Player 1 [X] Wins! Game Over!\n";
+    }
+    else if (turn == 'X' && !draw)
+    {
+        display_board();
+        cout << endl << endl << "Player 2 [O] Wins! Game Over!\n";
+    }
     else
-        cout<<"--> \aGame draw";
-    cin.ignore();
-    cin.get();
-}
-//Function to return to starting game
-//1= game is over -1= in progress o= game is over and no result
-//STARTS HERE
-int checkwin()
-{
-    if (square[1]==square[2]&&square[2]==square[3])
-        return 1;
-    else if (square[4] == square[5] && square[5] == square[6])
-
-            return 1;
-    else if (square[7] == square[8] && square[8] == square[9])
-
-            return 1;
-    else if (square[1] == square[4] && square[4] == square[7])
-
-            return 1;
-    else if (square[2] == square[5] && square[5] == square[8])
-
-            return 1;
-    else if (square[3] == square[6] && square[6] == square[9])
-
-            return 1;
-    else if (square[1] == square[5] && square[5] == square[9])
-
-            return 1;
-    else if (square[3] == square[5] && square[5] == square[7])
-
-            return 1;
-    else if (square[1] != '1' && square[2] != '2' && square[3] != '3' 
-                && square[4] != '4' && square[5] != '5' && square[6] != '6' 
-              && square[7] != '7' && square[8] != '8' && square[9] != '9')
-
-            return 0;
-    else
-            return -1;
+    {
+        display_board();
+        cout << endl << endl << "It's a draw! Game Over!\n";
+    }
 }
 
 
@@ -392,4 +339,91 @@ void board()
 	cout << "  " << square[7] << "  |  " << square[8] << "  |  " << square[9] << endl;
 
 	cout << "     |     |     " << endl << endl;
+}
+
+void display_board()
+{
+    cout << "---------------------" << endl << endl;
+    cout << "     |     |     " << endl;
+    cout << "  " << board[0][0] << "  |  " << board[0][1] << "  |  " << board[0][2] << endl;
+    cout << "_____|_____|_____" << endl;
+    cout << "     |     |     " << endl;
+    cout << "  " << board[1][0] << "  |  " << board[1][1] << "  |  " << board[1][2] << endl;
+    cout << "_____|_____|_____" << endl;
+    cout << "     |     |     " << endl;
+    cout << "  " << board[2][0] << "  |  " << board[2][1] << "  |  " << board[2][2] << endl;
+    cout << "     |     |     " << endl;
+}
+
+void player_turn()
+{
+    int choice;
+    int row = 0, column = 0;
+    
+    if (turn == 'X')
+    {
+        cout << "Player 1 turn [X]: ";
+    }
+    else if (turn == 'O')
+    {
+        cout << "Player 2 turn [O]: ";
+    }
+    cin >> choice;
+    
+    switch (choice)
+    {
+        case 1: row = 0; column = 0; break;
+        case 2: row = 0; column = 1; break;
+        case 3: row = 0; column = 2; break;
+        case 4: row = 1; column = 0; break;
+        case 5: row = 1; column = 1; break;
+        case 6: row = 1; column = 2; break;
+        case 7: row = 2; column = 0; break;
+        case 8: row = 2; column = 1; break;
+        case 9: row = 2; column = 2; break;
+        default:
+            cout << "You didn't enter a correct number! Try again\n";
+            player_turn();
+    }
+    
+    if (turn == 'X' && board[row][column] != 'X' && board[row][column] != 'O')
+    {
+        board[row][column] = 'X';
+        turn = 'O';
+    }
+    else if (turn == 'O' && board[row][column] != 'X' && board[row][column] != 'O')
+    {
+        board[row][column] = 'O';
+        turn = 'X';
+    }
+    else
+    {
+        cout << "The cell you chose is used! Try again\n";
+        player_turn();
+    }
+
+}
+
+bool gameover()
+{
+    for (int i = 0; i < 3; i++)//Check for a win
+    {
+        if ((board[i][0] == board[i][1] && board[i][1] == board[i][2]) || (board[0][i] == board[1][i] && board[1][i] == board[2][i]) || (board[0][0] == board[1][1] && board[1][1] == board[2][2]) || (board[0][2] == board[1][1] && board[1][1] == board[2][0]))
+        {
+            return true;
+        }
+    }
+    
+    for (int i = 0; i < 3; i++)//Check for draw
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (board[i][j] != 'X' && board[i][j] != 'O')
+            {
+                return false;
+            }
+        }
+    }
+    draw = true;
+    return true;
 }
